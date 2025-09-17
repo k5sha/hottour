@@ -1,0 +1,45 @@
+{
+  "name": "penwrite",
+  "version": "2.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "npx nodemon main.js"
+  },
+  "type": "module",
+  "author": "OASIS systems",
+  "license": "SEE LICENSE IN license",
+  "dependencies": {
+    "@neplex/vectorizer": "^0.0.5",
+    "abs-svg-path": "^0.1.1",
+    "archiver": "^7.0.1",
+    "axios": "^1.11.0",
+    "bcryptjs": "^3.0.2",
+    "canvas": "^3.1.0",
+    "canvas-hypertxt": "^1.0.3",
+    "config": "^3.3.12",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "cron": "^4.3.2",
+    "crypto": "^1.0.1",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "moment": "^2.30.1",
+    "mysql2": "^3.11.0",
+    "node-latex": "^3.1.0",
+    "opentype.js": "^1.3.4",
+    "parse-svg-path": "^0.1.2",
+    "path2d": "^0.3.1",
+    "pdf-lib": "^1.17.1",
+    "pdf-to-img": "^4.3.0",
+    "pdftopic": "^1.0.7-alpha",
+    "request-ip": "^3.3.0",
+    "sharp": "^0.33.5",
+    "stackblur-canvas": "^2.7.0",
+    "svg2ttf": "^6.0.3",
+    "unzipper": "^0.12.3"
+  },
+  "imports": {
+    "#*": "./*.js"
+  }
+}
