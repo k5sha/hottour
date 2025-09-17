@@ -1,0 +1,27 @@
+{
+  "name": "hottour",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k5sha/hottour.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/k5sha/hottour/issues"
+  },
+  "homepage": "https://github.com/k5sha/hottour#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
