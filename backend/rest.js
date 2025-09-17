@@ -132,7 +132,7 @@ auth_router.post('/register', (req, res, next) => account.register(payload(req, 
 
 router.post('/logout', (req, res, next) => account.logout(payload(req, res, next)))
 router.post('/settings', (req, res, next) => account.settings(payload(req, res, next)))
-auth_router.get('/example', (req, res, next) => service.example(payload(req, res, next)))
+auth_router.post('/example', (req, res, next) => service.example(payload(req, res, next)))
 
 /**
  * Exports & send response
