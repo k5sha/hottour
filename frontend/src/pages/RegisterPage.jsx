@@ -15,8 +15,8 @@ const serviceOptions = {
 const RegisterPage = () => {
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
-    const [users, setUsers] = useState([]);
-    const [selectedRows, setSelectedRows] = useState(new Set());
+    // const [users, setUsers] = useState([]);
+    // const [selectedRows, setSelectedRows] = useState(new Set());
 
     const phoneInputRef = useRef(null);
     const itiRef = useRef(null);
@@ -51,13 +51,13 @@ const RegisterPage = () => {
                 else if (!/\S+@\S+\.\S+/.test(value)) error = 'Будь ласка, введіть коректний email.';
                 break;
             case 'phone':
-                const prefix = `+${itiRef.current?.getSelectedCountryData().dialCode}`;
+                { const prefix = `+${itiRef.current?.getSelectedCountryData().dialCode}`;
                 if (!value || value === prefix) {
                     error = 'Будь ласка, введіть номер телефону.';
                 } else if (!itiRef.current?.isValidNumber()) {
                     error = 'Будь ласка, введіть повний і коректний номер.';
                 }
-                break;
+                break; }
             case 'password':
                 if (!value) error = 'Це поле є обов\'язковим.';
                 else if (value.length < 6) error = 'Пароль має бути не менше 6 символів.';
@@ -151,48 +151,51 @@ const RegisterPage = () => {
 
         setErrors(newErrors);
 
+        // TODO: use API for registration (add some popup)
         if (formIsValid) {
-            const newUser = {
-                id: Date.now(),
-                ...dataToValidate,
-                phone: itiRef.current.getNumber(),
-                fullName: `${dataToValidate.lastName} ${dataToValidate.firstName} ${dataToValidate.middleName}`.trim(),
-            };
-            setUsers(prev => [...prev, newUser]);
+            // const newUser = {
+            //     id: Date.now(),
+            //     ...dataToValidate,
+            //     phone: itiRef.current.getNumber(),
+            //     fullName: `${dataToValidate.lastName} ${dataToValidate.firstName} ${dataToValidate.middleName}`.trim(),
+            // };
+            // setUsers(prev => [...prev, newUser]);
             setFormData(initialFormData);
             fileInputRef.current.value = "";
         }
     };
 
-    const handleSelectRow = (userId) => {
-        const newSelection = new Set(selectedRows);
-        newSelection.has(userId) ? newSelection.delete(userId) : newSelection.add(userId);
-        setSelectedRows(newSelection);
-    };
+    // TODO: clear it
 
-    const handleSelectAll = (e) => {
-        setSelectedRows(e.target.checked ? new Set(users.map(u => u.id)) : new Set());
-    };
+    // const handleSelectRow = (userId) => {
+    //     const newSelection = new Set(selectedRows);
+    //     newSelection.has(userId) ? newSelection.delete(userId) : newSelection.add(userId);
+    //     setSelectedRows(newSelection);
+    // };
 
-    const handleDeleteSelected = () => {
-        if (window.confirm(`Ви впевнені, що хочете видалити ${selectedRows.size} рядок(ів)?`)) {
-            setUsers(prev => prev.filter(user => !selectedRows.has(user.id)));
-            setSelectedRows(new Set());
-        }
-    };
+    // const handleSelectAll = (e) => {
+    //     setSelectedRows(e.target.checked ? new Set(users.map(u => u.id)) : new Set());
+    // };
 
-    const handleDuplicateSelected = () => {
-        const duplicates = [];
-        users.forEach(user => {
-            if (selectedRows.has(user.id)) {
-                duplicates.push({ ...user, id: Date.now() + Math.random() });
-            }
-        });
-        setUsers(prev => [...prev, ...duplicates]);
-        setSelectedRows(new Set());
-    };
+    // const handleDeleteSelected = () => {
+    //     if (window.confirm(`Ви впевнені, що хочете видалити ${selectedRows.size} рядок(ів)?`)) {
+    //         setUsers(prev => prev.filter(user => !selectedRows.has(user.id)));
+    //         setSelectedRows(new Set());
+    //     }
+    // };
 
-    const canManageRows = selectedRows.size > 0;
+    // const handleDuplicateSelected = () => {
+    //     const duplicates = [];
+    //     users.forEach(user => {
+    //         if (selectedRows.has(user.id)) {
+    //             duplicates.push({ ...user, id: Date.now() + Math.random() });
+    //         }
+    //     });
+    //     setUsers(prev => [...prev, ...duplicates]);
+    //     setSelectedRows(new Set());
+    // };
+
+    // const canManageRows = selectedRows.size > 0;
 
     return (
         <main>
@@ -307,7 +310,8 @@ const RegisterPage = () => {
                 </form>
             </section>
 
-            <section id="table">
+            // TODO: clear it
+            {/* <section id="table">
                 <div style={{ display: 'flex', padding: '12px', gap: '8px' }}>
                     <button id="delete-selected" onClick={handleDeleteSelected} disabled={!canManageRows}>Видалити обрані</button>
                     <button id="duplicate-selected" onClick={handleDuplicateSelected} disabled={!canManageRows}>Дублювати обрані</button>
@@ -340,7 +344,7 @@ const RegisterPage = () => {
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </section> */}
         </main>
     );
 };
