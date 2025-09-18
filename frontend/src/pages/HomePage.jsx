@@ -1,8 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { useRef } from 'react';
 import { Hotel, MapPin, Star, Globe, Heart, ArrowRight, Calendar, Users, Clock } from 'lucide-react';
 
+const scrollToSection = (elementRef) => {
+window.scrollTo({
+  top: elementRef.current.offsetTop,
+  behavior: "smooth",
+ });
+};
+
 const HomePage = () => {
+    const main_section = useRef(null)
+
     const hotels = [
         {
             title: "Готель 'Морський Бриз'",
@@ -85,13 +95,13 @@ const HomePage = () => {
                     <p className="text-xl md:text-2xl opacity-90 mb-8">
                         Подорожуйте з нами - отримуйте незабутні враження
                     </p>
-                    <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105">
+                    <button  onClick={() => scrollToSection(main_section)} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105">
                         Почати подорож
                     </button>
                 </div>
             </div>
 
-            <main className="max-w-7xl mx-auto py-20 px-4">
+            <main ref={main_section}  className="max-w-7xl mx-auto py-20 px-4">
                 <section className="mb-20">
                     <div className="text-center mb-16">
                         <div className="inline-flex items-center gap-3 bg-indigo-900/30 px-8 py-4 rounded-full mb-6">
@@ -142,7 +152,7 @@ const HomePage = () => {
                 
                 <section className="mb-20">
                     <div className="text-center mb-16">
-                        <div className="inline-flex items-center gap-3 bg-purple-900/30 px-8 py-4 rounded-full mb-6">
+                        <div className="inline-flex items-center gap-3 bg-violet-900/30 px-8 py-4 rounded-full mb-6">
                             <Globe className="w-8 h-8" />
                             <h2 className="text-4xl font-bold">Наші екскурсії</h2>
                         </div>
@@ -159,8 +169,8 @@ const HomePage = () => {
                                 />
                                 
                                 <div className="flex items-center gap-2 mb-2">
-                                    <MapPin className="w-4 h-4 text-green-400" />
-                                    <span className="text-green-400 text-sm">{tour.location}</span>
+                                    <MapPin className="w-4 h-4 text-violet-400" />
+                                    <span className="text-violet-400 text-sm">{tour.location}</span>
                                 </div>
                                 
                                 <h3 className="text-xl font-semibold mb-3 h-14 line-clamp-2">{tour.title}</h3>
@@ -187,12 +197,12 @@ const HomePage = () => {
                                         ))}
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-xl font-bold text-green-400">{tour.price}</div>
+                                        <div className="text-xl font-bold text-violet-400 text0">{tour.price}</div>
                                         <div className="text-xs text-gray-400">з особи</div>
                                     </div>
                                 </div>
                                 
-                                <button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-2xl transition-colors duration-300">
+                                <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-3 px-4 rounded-2xl transition-colors duration-300">
                                     Забронювати
                                 </button>
                             </div>
