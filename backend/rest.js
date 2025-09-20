@@ -10,6 +10,7 @@ import { hotel } from '#handlers/hotel/_router'
 import path from 'node:path'
 import { tour } from '#handlers/tour/_router'
 import { booking } from '#handlers/booking/_router'
+import { review } from '#handlers/review/_router'
 
 const UPLOADS_DIRECTORY = config.get('path.uploads')
 const storage = multer.diskStorage({
@@ -188,6 +189,11 @@ public_router.post('/tour/get', (req, res, next) => tour.get(payload(req, res, n
 router.post('/booking/hotel', (req, res, next) => booking.hotel(payload(req, res, next)))
 router.post('/booking/tour', (req, res, next) => booking.tour(payload(req, res, next)))
 router.post('/booking/get', (req, res, next) => booking.get(payload(req, res, next)))
+
+router.post('/review/create', (req, res, next) => review.create(payload(req, res, next)))
+router.post('/review/edit', (req, res, next) => review.edit(payload(req, res, next)))
+router.post('/review/delete', (req, res, next) => review.delete(payload(req, res, next)))
+public_router.post('/review/get', (req, res, next) => review.get(payload(req, res, next)))
 
 /**
  * Exports & send response

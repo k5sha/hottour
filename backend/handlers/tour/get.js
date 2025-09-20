@@ -8,8 +8,17 @@ export async function get({ send, error, db, data, user, files }) {
     let tours = []
     if(public_id != undefined){
         let { result, ok } = await QueryExecutor('tour', db)
-            .select()
-            .where('public_id = ?', public_id)
+            .sql(`SELECT
+                    t.*,
+                    CAST(AVG(r.rating) AS INT) AS rating
+                FROM
+                    tour AS t
+                LEFT JOIN
+                    reviews AS r ON t.public_id = r.reference_id
+                WHERE
+                    t.public_id = ?
+                GROUP BY
+                    t.public_id`, public_id)
             .runGetFirst()
 
         if (!ok)
@@ -18,7 +27,15 @@ export async function get({ send, error, db, data, user, files }) {
         tours = result
     }else {
         let { result, ok } = await QueryExecutor('tour', db)
-            .select()
+            .sql(`SELECT
+                    t.*,
+                    CAST(AVG(r.rating) AS INT) AS rating
+                FROM
+                    tour AS t
+                LEFT JOIN
+                    reviews AS r ON t.public_id = r.reference_id
+                GROUP BY
+                    t.public_id;`)
             .run()
 
         if (!ok)

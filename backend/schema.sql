@@ -1,8 +1,8 @@
 -- Видалення таблиць, якщо вже існують, щоб уникнути повторень
 DROP TABLE IF EXISTS reviews;
-DROP TABLE IF EXISTS tour_bookings;
-DROP TABLE IF EXISTS hotel_bookings;
-DROP TABLE IF EXISTS tours;
+-- DROP TABLE IF EXISTS tour_bookings;
+-- DROP TABLE IF EXISTS hotel_bookings;
+-- DROP TABLE IF EXISTS tours;
 -- DROP TABLE IF EXISTS hotels;
 -- DROP TABLE IF EXISTS users;
 
@@ -33,45 +33,45 @@ DROP TABLE IF EXISTS tours;
 --     description TEXT NULL
 -- );
 
--- Тури
-CREATE TABLE tour (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    public_id VARCHAR(150) NOT NULL,
-    title VARCHAR(300) NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    image VARCHAR(255),
-    price DOUBLE NOT NULL,
-    from_datetime DATETIME NOT NULL,
-    to_datetime DATETIME NOT NULL,
-    description TEXT NULL,
-    participents_limit INT NOT NULL
-);
+-- -- Тури
+-- CREATE TABLE tour (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     public_id VARCHAR(150) NOT NULL,
+--     title VARCHAR(300) NOT NULL,
+--     location VARCHAR(255) NOT NULL,
+--     image VARCHAR(255),
+--     price DOUBLE NOT NULL,
+--     from_datetime DATETIME NOT NULL,
+--     to_datetime DATETIME NOT NULL,
+--     description TEXT NULL,
+--     participents_limit INT NOT NULL
+-- );
 
--- Бронювання готелів
-CREATE TABLE hotel_bookings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    public_id VARCHAR(150) NOT NULL,
-    user_id VARCHAR(150) NOT NULL,
-    hotel_id VARCHAR(150) NOT NULL,
-    from_date DATE NOT NULL,
-    to_date DATE NOT NULL
-);
+-- -- Бронювання готелів
+-- CREATE TABLE hotel_bookings (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     public_id VARCHAR(150) NOT NULL,
+--     user_id VARCHAR(150) NOT NULL,
+--     hotel_id VARCHAR(150) NOT NULL,
+--     from_date DATE NOT NULL,
+--     to_date DATE NOT NULL
+-- );
 
--- Бронювання турів
-CREATE TABLE tour_bookings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    public_id VARCHAR(150) NOT NULL,
-    user_id VARCHAR(150) NOT NULL,
-    tour_id VARCHAR(150) NOT NULL,
-    number_of_people INT NOT NULL
-);
+-- -- Бронювання турів
+-- CREATE TABLE tour_bookings (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     public_id VARCHAR(150) NOT NULL,
+--     user_id VARCHAR(150) NOT NULL,
+--     tour_id VARCHAR(150) NOT NULL,
+--     number_of_people INT NOT NULL
+-- );
 
 -- Відгуки
 CREATE TABLE reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
     public_id VARCHAR(150) NOT NULL,
     user_id VARCHAR(150) NOT NULL,
-    reference_id INT NOT NULL,
+    reference_id VARCHAR(150) NOT NULL,
     reference_type VARCHAR(50) NOT NULL,
     rating INT NOT NULL,
     comment TEXT NOT NULL,

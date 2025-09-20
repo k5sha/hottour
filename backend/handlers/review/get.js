@@ -5,27 +5,27 @@ import * as security from '#lib/utils/security'
 export async function get({ send, error, db, data, user, files }) {
     let { public_id } = data;
 
-    let tours = []
+    let reviews = []
     if(public_id != undefined){
-        let { result, ok } = await QueryExecutor('tour', db)
+        let { result, ok } = await QueryExecutor('reviews', db)
             .select()
             .where('public_id = ?', public_id)
-            .run()
+            .runGetFirst()
 
         if (!ok)
             return error(INTERNAL_ERROR, true);
 
-        tours = result
+        reviews = result
     }else {
-        let { result, ok } = await QueryExecutor('tour', db)
+        let { result, ok } = await QueryExecutor('reviews', db)
             .select()
             .run()
 
         if (!ok)
             return error(INTERNAL_ERROR, true);
 
-        tours = result
+        reviews = result
     }
 
-    return send(tours)
+    return send(reviews)
 }

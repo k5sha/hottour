@@ -12,7 +12,7 @@ export async function edit({ send, error, db, data, user, files }) {
     if (!security.valid(data, ['public_id']))
         return error(WRONG_INPUT, true);
     
-    let { public_id, title, location, price, description } = data;
+    let { public_id, title, location, price, description, from_datetime, to_datetime } = data;
 
     if(!user.is_admin)
         return error(FORBIDDEN)
@@ -28,7 +28,8 @@ export async function edit({ send, error, db, data, user, files }) {
     let tour = {
         public_id,
         image: files?.[0]?.filename,
-        title, location, price, description
+        title, location, price, description,
+        from_datetime, to_datetime
     };
 
     if(tour.image){

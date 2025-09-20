@@ -8,7 +8,6 @@ import fs from 'node:fs/promises'
 const UPLOADS_DIRECTORY = config.get('path.uploads')
 
 export async function deleteCall({ send, error, db, data, user, files }) {
-    try { data.price = parseFloat(data?.price) } catch (e) { }
     if (!security.valid(data, ['public_id']))
         return error(WRONG_INPUT, true);
 
