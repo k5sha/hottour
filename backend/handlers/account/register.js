@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { now } from "#lib/utils/datetime"
-import { EMAIL_TAKEN, INTERNAL_ERROR, PHONE_TAKEN, USERNAME_TAKEN, USER_ALREADY_EXISTS, WRONG_INPUT } from "#lib/utils/error_messages"
+import { EMAIL_TAKEN, INTERNAL_ERROR, PHONE_TAKEN, USER_ALREADY_EXISTS, WRONG_INPUT } from "#lib/utils/error_messages"
 import * as security from "#lib/utils/security"
 import { createAuthToken } from "#handlers/account/_utils"
 import { QueryExecutor } from "#lib/utils/database"
