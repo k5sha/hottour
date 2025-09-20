@@ -8,4 +8,8 @@ PHONE_TAKEN = 'phone_taken',
 EMAIL_TAKEN = 'email_taken',
 USER_ALREADY_EXISTS = 'user_already_exists',
 EXPIRED_SESSION = 'expired_session',
-FORBIDDEN = 'forbidden'
+FORBIDDEN = 'forbidden',
+SIZE_LIMIT = 'size_limit'
+
+// Фіча на майбутнє для перевірки овербукінгу, потрібно додавати к-сть місць у готелях:
+// OVERLAPPED_BOOKING = 'overlapped_booking' // коли обрані дні вже зайняті кимось іншим (всі або частина)

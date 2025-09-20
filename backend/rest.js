@@ -10,6 +10,7 @@ import multer from 'multer'
 import { hotel } from '#handlers/hotel/_router'
 import path from 'node:path'
 import { tour } from '#handlers/tour/_router'
+import { booking } from '#handlers/booking/_router'
 
 const UPLOADS_DIRECTORY = config.get('path.uploads')
 const storage = multer.diskStorage({
@@ -171,7 +172,8 @@ public_router.use(async function (req, res, next) {
 
 auth_router.post('/login', (req, res, next) => account.login(payload(req, res, next)))
 auth_router.post('/register', (req, res, next) => account.register(payload(req, res, next)))
-auth_router.post('/me', (req, res, next) => account.check(payload(req, res, next)))
+router.post('/me', (req, res, next) => account.me(payload(req, res, next)))
+router.post('/bookings', (req, res, next) => account.bookings(payload(req, res, next)))
 router.post('/logout', (req, res, next) => account.logout(payload(req, res, next)))
 
 router.post('/hotel/create', (req, res, next) => hotel.create(payload(req, res, next)))
@@ -183,6 +185,10 @@ router.post('/tour/create', (req, res, next) => tour.create(payload(req, res, ne
 router.post('/tour/edit', (req, res, next) => tour.edit(payload(req, res, next)))
 router.post('/tour/delete', (req, res, next) => tour.delete(payload(req, res, next)))
 public_router.post('/tour/get', (req, res, next) => tour.get(payload(req, res, next)))
+
+router.post('/booking/hotel', (req, res, next) => booking.hotel(payload(req, res, next)))
+router.post('/booking/tour', (req, res, next) => booking.tour(payload(req, res, next)))
+public_router.post('/booking/get', (req, res, next) => booking.get(payload(req, res, next)))
 
 /**
  * Exports & send response
