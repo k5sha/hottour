@@ -146,7 +146,10 @@ async function router_exit(req, res, next) {
         await db.rollback(client)
 
     db.releaseConnection(client)
-    res.send(res.webapp.response ?? { ok: false, error: NOT_FOUND })
+
+    let response = res.webapp.response ?? { ok: false, error: NOT_FOUND }
+    if (response.ok) res.send(response)
+    else next(new Error(response))
 }
 
 auth_router.use(router_exit)

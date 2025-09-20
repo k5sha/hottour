@@ -39,6 +39,7 @@ export async function login({ send, error, db, data }) {
 
     delete user.session_key;
     delete user.password;
+    delete user.id;
 
     return send({
         auth_token: createAuthToken(user.public_id, session_key),

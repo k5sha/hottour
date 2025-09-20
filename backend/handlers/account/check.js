@@ -12,7 +12,7 @@ export async function check({ data, send, error, db }) {
     const { public_id, session_key } = extractAuthToken(data.auth_token)
 
     var { result: user, ok } = await QueryExecutor('users', db)
-        .select('session_key')
+        .select()
         .where('public_id = ?', public_id)
         .runGetFirst()
 
@@ -20,7 +20,11 @@ export async function check({ data, send, error, db }) {
     if (user == undefined) return error(USER_NOT_FOUND)
     if (user.session_key !== session_key) return error(EXPIRED_SESSION)
 
+    delete user.session_key;
+    delete user.password;
+    delete user.id;
+
     return send({
-        public_id
+        ...user
     })
 }
