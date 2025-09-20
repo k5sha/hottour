@@ -13,6 +13,7 @@ window.scrollTo({
 const HomePage = () => {
     const main_section = useRef(null)
 
+    // TODO: прибрати за ніч, зробити по дефолту
     const hotels = [
         {
             title: "Готель 'Морський Бриз'",
@@ -34,6 +35,8 @@ const HomePage = () => {
         }
     ];
 
+    // TODO: duration в секундах
+    // TODO: прибрати groupSize
     const excursions = [
         {
             title: "Історичний тур по Львову",

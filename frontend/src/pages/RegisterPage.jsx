@@ -9,9 +9,7 @@ const initialFormData = {
     email: '', 
     phone: '+380', 
     password: '', 
-    lastName: '', 
-    firstName: '',
-    middleName: '', 
+    fullName: '', 
     sex: '', 
     birthDate: ''
 };
@@ -37,9 +35,7 @@ const RegisterPage = () => {
                 if (!value) error = 'Це поле є обов\'язковим.';
                 else if (value.length < 6) error = 'Пароль має бути не менше 6 символів.';
                 break;
-            case 'lastName':
-            case 'firstName':
-            case 'middleName':
+            case 'fullName':
                 if (!value.trim()) error = 'Це поле є обов\'язковим.';
                 break;
             case 'sex':
@@ -108,65 +104,26 @@ const RegisterPage = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} noValidate className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
                             <div>
-                                <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">
-                                    Прізвище
+                                <label htmlFor="fullName" className="block text-sm font-medium text-gray-300 mb-2">
+                                    ПІБ
                                 </label>
                                 <div className="relative">
                                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                     <input
                                         type="text"
-                                        name="lastName"
-                                        id="lastName"
-                                        value={formData.lastName}
+                                        name="fullName"
+                                        id="fullName"
+                                        value={formData.fullName}
                                         onChange={handleChange}
                                         className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
-                                        placeholder="Прізвище"
+                                        placeholder="Євтушенко Юрій Олексійович"
                                     />
                                 </div>
-                                {errors.lastName && <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>}
-                            </div>
-
-                            <div>
-                                <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">
-                                    Ім'я
-                                </label>
-                                <div className="relative">
-                                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        name="firstName"
-                                        id="firstName"
-                                        value={formData.firstName}
-                                        onChange={handleChange}
-                                        className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
-                                        placeholder="Ім'я"
-                                    />
-                                </div>
-                                {errors.firstName && <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>}
-                            </div>
-
-                            <div>
-                                <label htmlFor="middleName" className="block text-sm font-medium text-gray-300 mb-2">
-                                    По батькові
-                                </label>
-                                <div className="relative">
-                                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        name="middleName"
-                                        id="middleName"
-                                        value={formData.middleName}
-                                        onChange={handleChange}
-                                        className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
-                                        placeholder="По батькові"
-                                    />
-                                </div>
-                                {errors.middleName && <p className="text-red-400 text-sm mt-1">{errors.middleName}</p>}
+                                {errors.fullName && <p className="text-red-400 text-sm mt-1">{errors.fullName}</p>}
                             </div>
                         </div>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
