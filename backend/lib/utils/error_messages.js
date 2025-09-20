@@ -7,4 +7,5 @@ NOT_FOUND = "not_found",
 PHONE_TAKEN = 'phone_taken',
 EMAIL_TAKEN = 'email_taken',
 USER_ALREADY_EXISTS = 'user_already_exists',
-EXPIRED_SESSION = 'expired_session'
+EXPIRED_SESSION = 'expired_session',
+FORBIDDEN = 'forbidden'

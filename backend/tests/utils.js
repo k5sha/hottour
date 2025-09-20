@@ -1,7 +1,6 @@
 import * as db from '#lib/utils/database'
 import { connectMySql } from "#lib/utils/database";
 
-
 export async function testInput(data){
     await connectMySql();
     const connection = await db.getConnection()

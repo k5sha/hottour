@@ -7,7 +7,7 @@ import { extractAuthToken, validAuthToken } from '#handlers/account/_utils';
 
 export async function check({ data, send, error, db }) {
     if (!security.valid(data, ['auth_token']) || !validAuthToken(data.auth_token))
-        return error(WRONG_INPUT);
+        return error(WRONG_INPUT, true);
 
     const { public_id, session_key } = extractAuthToken(data.auth_token)
 

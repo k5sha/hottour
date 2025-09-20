@@ -8,6 +8,6 @@ register(await testInput({
     password: '123',
     full_name: 'full name',
     sex: 'male',
-    phone: '38063123456789',
+    phone: '+38063123456789',
     birth_date: '2025-09-15',
 }))
