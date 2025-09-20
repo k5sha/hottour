@@ -1,17 +1,40 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router';
 import { Eye, EyeOff, LogIn, Mail, Lock, ArrowRight } from 'lucide-react';
+import axios from "axios"
+import {useMutation } from "@tanstack/react-query"
+import { BACKEND_API } from '../utils/config';
+import { SetToken } from '../utils/auth';
+import { useNavigate } from "react-router";
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+
+    const mutation = useMutation({
+    mutationFn: (newUser) => {
+      return axios.post(`${BACKEND_API}/auth/login`, newUser)
+    },
+    onSuccess: (res) => {
+        console.log(res)
+        SetToken(res.data.auth_token)
+        navigate("/");
+    },
+    onError: (error) => {
+        console.log(error)
+        alert("Сталася якась помилка!")
+    },
+  })
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        email: '',
+        login: '',
         password: ''
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('Login data:', formData);
+
+        mutation.mutate(formData)
     };
 
     const handleChange = (e) => {
@@ -35,17 +58,17 @@ const LoginPage = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
-                                Email
+                            <label htmlFor="login" className="block text-sm font-medium text-gray-300">
+                                Логін
                             </label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input
-                                    type="email"
-                                    name="email"
-                                    id="email"
+                                    type="login"
+                                    name="login"
+                                    id="login"
                                     required
-                                    value={formData.email}
+                                    value={formData.login}
                                     onChange={handleChange}
                                     className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
                                     placeholder="your@email.com"
