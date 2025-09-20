@@ -8,7 +8,7 @@ import { QueryExecutor } from "#lib/utils/database"
 export async function register(penwrite) {
     const { send, error, db, data } = penwrite
 
-    if (!security.valid(data, ['username', 'email', 'password']))
+    if (!security.valid(data, ['full_name', 'sex', 'email', 'phone', 'birth_date', 'password']))
         return error(WRONG_INPUT, true)
 
     var { username, email, password } = data
