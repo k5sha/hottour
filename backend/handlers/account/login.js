@@ -20,7 +20,7 @@ export async function login({ send, error, db, data }) {
     else
         query = QueryExecutor('users', db)
             .select()
-            .where('username = ?', login)
+            .where('phone = ?', login)
 
     let { result: user, ok: user_ok } = await query.runGetFirst()
 
@@ -37,10 +37,11 @@ export async function login({ send, error, db, data }) {
 
     if (!ok) return error(INTERNAL_ERROR)
 
+    delete user.session_key;
+    delete user.password;
+
     return send({
         auth_token: createAuthToken(user.public_id, session_key),
-        session_key: session_key,
-        username: user.username,
-        options: user.options
+        ...user
     })
 }
