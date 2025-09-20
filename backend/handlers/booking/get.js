@@ -17,7 +17,7 @@ export async function get({ send, error, db, data, user, files }) {
         let { result, ok } = await QueryExecutor(table, db)
             .select()
             .where('public_id = ?', public_id)
-            .run()
+            .runGetFirst()
 
         if(!user.is_admin && user.public_id != result.user_id)
             return error(FORBIDDEN);

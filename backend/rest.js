@@ -4,7 +4,6 @@ import express from 'express'
 import { getClientIp } from 'request-ip'
 import { INTERNAL_ERROR, NOT_FOUND } from '#lib/utils/error_messages'
 import { account } from '#handlers/account/_router'
-import { service } from '#handlers/service/_router'
 import config from 'config'
 import multer from 'multer'
 import { hotel } from '#handlers/hotel/_router'
@@ -188,7 +187,7 @@ public_router.post('/tour/get', (req, res, next) => tour.get(payload(req, res, n
 
 router.post('/booking/hotel', (req, res, next) => booking.hotel(payload(req, res, next)))
 router.post('/booking/tour', (req, res, next) => booking.tour(payload(req, res, next)))
-public_router.post('/booking/get', (req, res, next) => booking.get(payload(req, res, next)))
+router.post('/booking/get', (req, res, next) => booking.get(payload(req, res, next)))
 
 /**
  * Exports & send response
