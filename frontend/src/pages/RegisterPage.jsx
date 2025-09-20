@@ -4,21 +4,38 @@ import { UserPlus, Eye, EyeOff, Mail, Phone, Lock, User, Calendar, ArrowRight, V
 import PhoneInput from 'react-phone-number-input'
 import { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
-
+import axios from "axios"
+import {useMutation } from "@tanstack/react-query"
+import { BACKEND_API } from '../utils/config';
+import { SetToken } from '../utils/auth';
 const initialFormData = {
     email: '', 
     phone: '+380', 
     password: '', 
-    fullName: '', 
+    full_name: '', 
     sex: '', 
-    birthDate: ''
+    birth_date: ''
 };
 
 const RegisterPage = () => {
+    const mutation = useMutation({
+    mutationFn: (newUser) => {
+      return axios.post(`${BACKEND_API}/auth/register`, newUser)
+    },
+    onSuccess: (res) => {
+        console.log(res)
+        SetToken(res.data.auth_token)
+        alert("Ура! Користувача зареєстровано")
+    },
+    onError: (error) => {
+        console.log(error)
+        alert("Сталася якась помилка!")
+    },
+  })
+  
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const validateField = (name, value) => {
         let error = '';
@@ -35,13 +52,13 @@ const RegisterPage = () => {
                 if (!value) error = 'Це поле є обов\'язковим.';
                 else if (value.length < 6) error = 'Пароль має бути не менше 6 символів.';
                 break;
-            case 'fullName':
+            case 'full_name':
                 if (!value.trim()) error = 'Це поле є обов\'язковим.';
                 break;
             case 'sex':
                 if (!value) error = 'Будь ласка, оберіть вашу стать.';
                 break;
-            case 'birthDate':
+            case 'birth_date':
                 if (!value) error = 'Будь ласка, оберіть дату народження.';
                 else if (new Date(value) > new Date()) error = 'Дата народження не може бути у майбутньому.';
                 break;
@@ -67,7 +84,6 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true);
         
         let formIsValid = true;
         const newErrors = {};
@@ -83,12 +99,11 @@ const RegisterPage = () => {
         setErrors(newErrors);
 
         if (formIsValid) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            alert('Реєстрація успішна!');
+            mutation.mutate(formData)
+            console.log(formData)
             setFormData(initialFormData);
         }
         
-        setIsSubmitting(false);
     };
 
     return (
@@ -106,22 +121,22 @@ const RegisterPage = () => {
                     <form onSubmit={handleSubmit} noValidate className="space-y-6">
                         <div>
                             <div>
-                                <label htmlFor="fullName" className="block text-sm font-medium text-gray-300 mb-2">
+                                <label htmlFor="full_name" className="block text-sm font-medium text-gray-300 mb-2">
                                     ПІБ
                                 </label>
                                 <div className="relative">
                                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                     <input
                                         type="text"
-                                        name="fullName"
-                                        id="fullName"
-                                        value={formData.fullName}
+                                        name="full_name"
+                                        id="full_name"
+                                        value={formData.full_name}
                                         onChange={handleChange}
                                         className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
                                         placeholder="Євтушенко Юрій Олексійович"
                                     />
                                 </div>
-                                {errors.fullName && <p className="text-red-400 text-sm mt-1">{errors.fullName}</p>}
+                                {errors.full_name && <p className="text-red-400 text-sm mt-1">{errors.full_name}</p>}
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -224,30 +239,30 @@ const RegisterPage = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="birthDate" className="block text-sm font-medium text-gray-300 mb-2">
+                                <label htmlFor="birth_date" className="block text-sm font-medium text-gray-300 mb-2">
                                     Дата народження
                                 </label>
                                 <div className="relative">
                                     <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                     <input
                                         type="date"
-                                        name="birthDate"
-                                        id="birthDate"
-                                        value={formData.birthDate}
+                                        name="birth_date"
+                                        id="birth_date"
+                                        value={formData.birth_date}
                                         onChange={handleChange}
                                         className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
                                     />
                                 </div>
-                                {errors.birthDate && <p className="text-red-400 text-sm mt-1">{errors.birthDate}</p>}
+                                {errors.birth_date && <p className="text-red-400 text-sm mt-1">{errors.birth_date}</p>}
                             </div>
                         </div>
 
                         <button
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={mutation.isPending}
                             className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 hover:gap-3 transform hover:scale-105 disabled:transform-none disabled:hover:gap-2"
                         >
-                            {isSubmitting ? 'Обробка...' : 'Зареєструватися'}
+                            {mutation.isPending ? 'Обробка...' : 'Зареєструватися'}
                             <ArrowRight className="w-5 h-5" />
                         </button>
                     </form>

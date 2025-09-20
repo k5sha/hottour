@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { useRef } from 'react';
 import { Hotel, MapPin, Star, Globe, Heart, ArrowRight, Calendar, Users, Clock } from 'lucide-react';
+import { AddToken, SetToken } from '../utils/auth';
 
 const scrollToSection = (elementRef) => {
 window.scrollTo({
