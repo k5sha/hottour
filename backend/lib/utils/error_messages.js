@@ -1,4 +1,5 @@
 export const
+INTERNAL_ERROR = "internal_error",
 WRONG_INPUT = "wrong_input",
 USER_NOT_FOUND = "user_not_found",
 WRONG_PASSWORD = "wrong_password",
