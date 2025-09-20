@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { now } from "#lib/utils/datetime"
-import { EMAIL_TAKEN, INTERNAL_ERROR, USERNAME_TAKEN, USER_ALREADY_EXISTS, WRONG_INPUT } from "#lib/utils/error_messages"
+import { EMAIL_TAKEN, INTERNAL_ERROR, PHONE_TAKEN, USERNAME_TAKEN, USER_ALREADY_EXISTS, WRONG_INPUT } from "#lib/utils/error_messages"
 import * as security from "#lib/utils/security"
 import { createAuthToken } from "#handlers/account/_utils"
 import { QueryExecutor } from "#lib/utils/database"
@@ -11,44 +11,41 @@ export async function register(penwrite) {
     if (!security.valid(data, ['full_name', 'sex', 'email', 'phone', 'birth_date', 'password']))
         return error(WRONG_INPUT, true)
 
-    var { username, email, password } = data
+    var { full_name, sex, email, phone, birth_date, password } = data
 
-    let { result: user, ok: user_ok } = await QueryExecutor('users', db)
-        .select('username', 'email')
-        .where('username = ? OR email = ?', username, email)
+    let { result: existing_user, ok: existing_user_ok } = await QueryExecutor('users', db)
+        .select()
+        .where('email = ? OR phone = ?', email, phone)
         .runGetFirst()
 
-    if (!user_ok) return error(INTERNAL_ERROR)
+    if (!existing_user_ok) return error(INTERNAL_ERROR)
 
-    if (user != undefined) {
-        if (user.username.toLowerCase() == username.toLowerCase())
-            return error(USERNAME_TAKEN)
-        else if (user.email.toLowerCase() == email.toLowerCase())
+    if (existing_user != undefined) {
+        if (existing_user.phone.toLowerCase() == phone.toLowerCase())
+            return error(PHONE_TAKEN)
+        else if (existing_user.email.toLowerCase() == email.toLowerCase())
             return error(EMAIL_TAKEN)
         else
-            return error(USER_ALREADY_EXISTS)
+            return error(INTERNAL_ERROR)
     }
 
     var public_id = security.uniqid();
     var session_key = security.gen(128);
     var join_date = now();
 
-
     let user_data = {
-        public_id: public_id,
-        username: username,
-        join_date: join_date,
-        email: email,
-        unlimited: null,
-        symbols_total: 0,
-        is_blocked: false,
-
-        // preferences
-        // fontfile, pencolor...
-
-        session_key: session_key,
+        public_id,
+        full_name,
+        sex,
+        email,
+        phone,
+        birth_date,
+        session_key,
+        is_admin: false,
+        join_date,
         password: (await bcrypt.hash(password, 12)).toString(),
     }
+
     let { ok: created_user } = await QueryExecutor('users', db)
         .insert(user_data)
         .run()
@@ -60,6 +57,9 @@ export async function register(penwrite) {
         auth_token: createAuthToken(public_id, session_key),
         ...user_data
     }
+
+    delete penwrite.user.password;
+    delete penwrite.user.session_key;
 
     return send(penwrite.user)
 }
