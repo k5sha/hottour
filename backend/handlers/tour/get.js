@@ -10,7 +10,7 @@ export async function get({ send, error, db, data, user, files }) {
         let { result, ok } = await QueryExecutor('tour', db)
             .select()
             .where('public_id = ?', public_id)
-            .run()
+            .runGetFirst()
 
         if (!ok)
             return error(INTERNAL_ERROR, true);
