@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { AddToken } from '../../utils/auth';
 import { BACKEND_API } from '../../utils/config';
+import toast from 'react-hot-toast';
 
 const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
   const formatPrice = (price) => {
@@ -37,18 +38,22 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
     participants: 1
   });
 
+  // Розрахунок доступних місць
+  const availableSpots = tour.participents_limit - (tour.enrolled_count || 0);
+
   const bookingMutation = useMutation({
     mutationFn: (bookingData) => {
       bookingData = AddToken(bookingData)
       return axios.post(`${BACKEND_API}/api/booking/tour`, bookingData);
     },
     onSuccess: () => {
-      alert('Бронювання успішне!');
+      toast.success('Бронювання туру успішне! 🎉');
       onClose();
     },
     onError: (error) => {
       console.error('Помилка бронювання:', error);
-      alert('Сталася помилка при бронюванні. Спробуйте ще раз.');
+      const errorMessage = error.response?.data?.message || 'Сталася помилка при бронюванні. Спробуйте ще раз.';
+      toast.error(errorMessage);
     }
   });
 
@@ -56,8 +61,10 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
     const { name, value } = e.target;
     let participantsValue = parseInt(value) || 1;
 
-    if (tour.participents_limit && participantsValue > tour.participents_limit) {
-      participantsValue = tour.participents_limit;
+    // Обмеження максимальної кількості учасників
+    if (participantsValue > availableSpots) {
+      participantsValue = availableSpots;
+      toast.error(`Доступно лише ${availableSpots} місць`);
     }
     if (participantsValue < 1) {
       participantsValue = 1;
@@ -72,8 +79,14 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (tour.participents_limit && formData.participants > tour.participents_limit) {
-      alert(`Максимальна кількість учасників: ${tour.participents_limit}`);
+    // Перевірка доступності місць
+    if (availableSpots <= 0) {
+      toast.error('На жаль, вільних місць не залишилось');
+      return;
+    }
+
+    if (formData.participants > availableSpots) {
+      toast.error(`Доступно лише ${availableSpots} місць`);
       return;
     }
 
@@ -102,7 +115,10 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
       <div className="bg-gray-900 rounded-3xl w-full max-w-2xl overflow-hidden my-auto">
         <div className="relative">
           <button 
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              toast('Бронювання скасовано', { icon: '❌' });
+            }}
             className="absolute top-4 right-4 z-10 bg-gray-800 hover:bg-gray-700 rounded-full p-2 transition-colors"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
@@ -115,6 +131,7 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.src = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800";
+                toast.error('Помилка завантаження зображення туру');
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
@@ -139,6 +156,28 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
                 <Star key={i} className="w-4 h-4 md:w-5 md:h-5 fill-yellow-400 text-yellow-400" />
               ))}
             </div>
+          </div>
+
+          {/* Блок з інформацією про доступність місць */}
+          <div className="bg-blue-900/30 p-3 md:p-4 rounded-2xl mb-4 md:mb-6">
+            <h3 className="text-base md:text-lg font-semibold mb-2 text-blue-400">Доступність</h3>
+            <div className="flex items-center gap-2 text-sm md:text-base">
+              <div className={`w-3 h-3 rounded-full ${availableSpots > 0 ? 'bg-green-400' : 'bg-red-400'}`}></div>
+              <span>
+                {availableSpots > 0 ? (
+                  <span className="text-green-400">
+                    Залишилось {availableSpots} {availableSpots === 1 ? 'місце' : availableSpots < 5 ? 'місця' : 'місць'}
+                  </span>
+                ) : (
+                  <span className="text-red-400">Місць не залишилось</span>
+                )}
+              </span>
+            </div>
+            {tour.enrolled_count && (
+              <p className="text-xs md:text-sm text-gray-400 mt-1">
+                Вже заброньовано: {tour.enrolled_count}/{tour.participents_limit} осіб
+              </p>
+            )}
           </div>
 
           <div className="bg-gray-800 p-3 md:p-4 rounded-2xl mb-4 md:mb-6">
@@ -182,8 +221,9 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
                   value={formData.participants}
                   onChange={handleInputChange}
                   min="1"
-                  max={tour.participents_limit || 50}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-2xl pl-10 pr-4 py-2 md:py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base"
+                  max={availableSpots > 0 ? availableSpots : 1}
+                  disabled={availableSpots <= 0}
+                  className="w-full bg-gray-800 border border-gray-700 rounded-2xl pl-10 pr-4 py-2 md:py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   required
                 />
                 <label className="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400">Кількість осіб</label>
@@ -206,10 +246,10 @@ const TourBookingModal = ({ tour, isOpen, onClose, userData }) => {
               </div>
               <button
                 type="submit"
-                disabled={bookingMutation.isPending}
-                className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 disabled:transform-none text-sm md:text-base"
+                disabled={bookingMutation.isPending || availableSpots <= 0}
+                className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 disabled:transform-none text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {bookingMutation.isPending ? 'Обробка...' : 'Забронювати'}
+                {availableSpots <= 0 ? 'Місць немає' : bookingMutation.isPending ? 'Обробка...' : 'Забронювати'}
               </button>
             </div>
           </form>

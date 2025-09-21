@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { AddToken } from '../../utils/auth';
 import { BACKEND_API } from '../../utils/config';
+import toast from 'react-hot-toast';
 
 const HotelBookingModal = ({ hotel, isOpen, onClose, userData }) => {
   const getFormattedDate = (date) => {
@@ -32,12 +33,13 @@ const HotelBookingModal = ({ hotel, isOpen, onClose, userData }) => {
       return axios.post(`${BACKEND_API}/api/booking/hotel`, bookingData);
     },
     onSuccess: () => {
-      alert('Бронювання успішне!');
+      toast.success('Бронювання успішне! 🎉');
       onClose();
     },
     onError: (error) => {
       console.error('Помилка бронювання:', error);
-      alert('Сталася помилка при бронюванні. Спробуйте ще раз.');
+      const errorMessage = error.response?.data?.message || 'Сталася помилка при бронюванні. Спробуйте ще раз.';
+      toast.error(errorMessage);
     }
   });
 
@@ -57,12 +59,12 @@ const HotelBookingModal = ({ hotel, isOpen, onClose, userData }) => {
     const checkOutDate = new Date(formData.checkOut);
     
     if (checkInDate < today || checkOutDate < today) {
-      alert('Дата не може бути раніше за сьогодні');
+      toast.error('Дата не може бути раніше за сьогодні');
       return;
     }
     
     if (checkOutDate <= checkInDate) {
-      alert('Дата виїзду повинна бути пізніше за дату заїзду');
+      toast.error('Дата виїзду повинна бути пізніше за дату заїзду');
       return;
     }
 
@@ -114,7 +116,10 @@ const HotelBookingModal = ({ hotel, isOpen, onClose, userData }) => {
       <div className="bg-gray-900 rounded-3xl w-full max-w-2xl overflow-hidden">
         <div className="relative">
           <button 
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              toast('Бронювання скасовано', { icon: '❌' });
+            }}
             className="absolute top-4 right-4 z-10 bg-gray-800 hover:bg-gray-700 rounded-full p-2 transition-colors"
           >
             <X className="w-6 h-6" />
@@ -127,6 +132,7 @@ const HotelBookingModal = ({ hotel, isOpen, onClose, userData }) => {
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800";
+                toast.error('Помилка завантаження зображення готелю');
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />

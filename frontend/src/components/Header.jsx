@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router'; 
-import { LogIn, UserPlus, User, LogOut, Crown, Settings } from 'lucide-react';
+import { LogIn, UserPlus, User, LogOut, Crown, Settings, Ticket } from 'lucide-react';
 import axios from 'axios';
 import { BACKEND_API } from '../utils/config';
 import { AddToken } from '../utils/auth';
@@ -38,7 +38,7 @@ const Header = ({ userData, setUserData }) => {
                     <ul className="flex gap-3 list-none m-0 p-0 items-center">
                         {userData ? (
                             <li className="flex items-center gap-3">
-                                {userData.is_admin === 1 && (
+                                {userData.is_admin === 1 ? (
                                     <Link 
                                         to="/admin"
                                         className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-purple-600/20"
@@ -46,6 +46,15 @@ const Header = ({ userData, setUserData }) => {
                                     >
                                         <Settings className="w-4 h-4" />
                                         <span className="hidden sm:inline">Адмін-панель</span>
+                                    </Link>
+                                ) : (
+                                    <Link 
+                                        to="/my-bookings"
+                                        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-purple-600/20"
+                                        title="Мої бронювання"
+                                    >
+                                        <Ticket className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Мої бронювання</span>
                                     </Link>
                                 )}
                                 
@@ -63,7 +72,6 @@ const Header = ({ userData, setUserData }) => {
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <button 
                                     onClick={handleLogout}
                                     className="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-indigo-600/20"
