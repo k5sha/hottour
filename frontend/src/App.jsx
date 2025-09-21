@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router';
+import { Routes, Route, useLocation, Navigate } from 'react-router';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';import FAQPage from './pages/FAQPage';
+import RegisterPage from './pages/RegisterPage';
+import FAQPage from './pages/FAQPage';
+import NotFoundPage from './pages/NotFoundPage';
 import AdminPage from './pages/AdminPage';
 import { AddToken } from './utils/auth';
 import axios from 'axios';
@@ -56,7 +58,17 @@ const App = () => {
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/regist" element={<RegisterPage/>} />
         <Route path="/faq" element={<FAQPage />} />
-        <Route path="/admin" element={<AdminPage userData={userData} />} />
+        <Route 
+          path="/admin" 
+          element={
+            userData?.is_admin === 1 ? (
+              <AdminPage userData={userData} />
+            ) : (
+              <NotFoundPage />
+            )
+          } 
+        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </>

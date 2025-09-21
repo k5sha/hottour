@@ -1,29 +1,53 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router'; 
 import { Eye, EyeOff, LogIn, Mail, Lock, ArrowRight } from 'lucide-react';
 import axios from "axios"
-import {useMutation } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { BACKEND_API } from '../utils/config';
 import { SetToken } from '../utils/auth';
-import { useNavigate } from "react-router";
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
-    const navigate = useNavigate();
-
     const mutation = useMutation({
-    mutationFn: (newUser) => {
-      return axios.post(`${BACKEND_API}/auth/login`, newUser)
-    },
-    onSuccess: (res) => {
-        console.log(res)
-        SetToken(res.data.auth_token)
-        navigate("/");
-    },
-    onError: (error) => {
-        console.log(error)
-        alert("Сталася якась помилка!")
-    },
-  })
+        mutationFn: (newUser) => {
+            return axios.post(`${BACKEND_API}/auth/login`, newUser)
+        },
+        onSuccess: (res) => {
+            console.log(res)
+            if (res.data.ok) {
+                SetToken(res.data.auth_token)
+                toast.success('Успішний вхід!');
+                
+                setTimeout(() => {
+                     window.location.href = '/';
+                }, 1000);
+            } else {
+                handleServerError(res.data.error);
+            }
+        },
+        onError: (error) => {
+            console.log(error)
+            if (error.response?.data?.error) {
+                handleServerError(error.response.data.error);
+            } else {
+                toast.error('Сталася якась помилка!');
+            }
+        },
+    });
+
+    const handleServerError = (errorCode) => {
+        switch (errorCode) {
+            case 'user_not_found':
+                toast.error('Користувача з таким логіном не знайдено');
+                break;
+            case 'wrong_password':
+                toast.error('Неправильний пароль');
+                break;
+            default:
+                toast.error('Сталася невідома помилка. Спробуйте ще раз');
+        }
+    };
+
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         login: '',
@@ -32,9 +56,18 @@ const LoginPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Login data:', formData);
-
-        mutation.mutate(formData)
+        
+        // Базовая валидация
+        if (!formData.login.trim()) {
+            toast.error('Будь ласка, введіть логін');
+            return;
+        }
+        if (!formData.password.trim()) {
+            toast.error('Будь ласка, введіть пароль');
+            return;
+        }
+        
+        mutation.mutate(formData);
     };
 
     const handleChange = (e) => {
@@ -59,19 +92,19 @@ const LoginPage = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <label htmlFor="login" className="block text-sm font-medium text-gray-300">
-                                Логін
+                                Логін або Email
                             </label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input
-                                    type="login"
+                                    type="text"
                                     name="login"
                                     id="login"
                                     required
                                     value={formData.login}
                                     onChange={handleChange}
                                     className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
-                                    placeholder="your@email.com"
+                                    placeholder="Ваш логін або email"
                                 />
                             </div>
                         </div>
@@ -120,14 +153,21 @@ const LoginPage = () => {
 
                         <button
                             type="submit"
-                            className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 hover:gap-3 transform hover:scale-105"
+                            disabled={mutation.isPending}
+                            className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 hover:gap-3 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
                         >
-                            Увійти
-                            <ArrowRight className="w-5 h-5" />
+                            {mutation.isPending ? (
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            ) : (
+                                <>
+                                    Увійти
+                                    <ArrowRight className="w-5 h-5" />
+                                </>
+                            )}
                         </button>
                     </form>
 
-                    <div className="text-center">
+                    <div className="text-center mt-6">
                         <p className="text-gray-400">
                             Ще не маєте акаунту?{' '}
                             <Link
