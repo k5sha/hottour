@@ -268,7 +268,6 @@ const HomePage = ({ userData }) => {
           <button 
             onClick={() => {
               scrollToSection(main_section);
-              toast('Перехід до каталогу', { icon: '👇' });
             }} 
             className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105"
           >
