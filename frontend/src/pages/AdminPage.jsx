@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Edit3, Trash2, Home, Globe, BookOpen, Search, Star, Users, Calendar, Clock, MapPin } from 'lucide-react';
+import { Plus, Edit3, Trash2, Home, Globe, BookOpen, Search, Star, Users, Calendar, Clock, MapPin, Eye  } from 'lucide-react';
 import axios from 'axios';
 import { BACKEND_API } from '../utils/config';
 import { AddToken } from '../utils/auth';
@@ -8,16 +8,20 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import AddHotelModal from '../components/modals/AddHotelModal';
 import AddTourModal from '../components/modals/AddTourModal';
 import DeleteConfirmationModal from '../components/modals/DeleteConfirmationModal';
+import BookingDetailsModal from '../components/modals/BookingDetailsModal';
 
 const AdminPage = () => {
     const [activeTab, setActiveTab] = useState('bookings');
     const [showHotelModal, setShowHotelModal] = useState(false);
     const [showTourModal, setShowTourModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showBookingDetailsModal, setShowBookingDetailsModal] = useState(false);
     const [bookingType, setBookingType] = useState('hotels');
     const [editingHotel, setEditingHotel] = useState(null);
     const [editingTour, setEditingTour] = useState(null);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [selectedBooking, setSelectedBooking] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [deleteType, setDeleteType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [sortField, setSortField] = useState('created_at');
@@ -40,9 +44,47 @@ const AdminPage = () => {
         queryFn: () => {
             var bookingData = { type: bookingType }
             bookingData = AddToken(bookingData)
-            return axios.post(`${BACKEND_API}/api/bookings`, bookingData).then(res => res.data)
+            return axios.post(`${BACKEND_API}/api/booking/get`, bookingData).then(res => res.data)
         }
     });
+
+        const { mutate: getUserDetails, isLoading: userLoading } = useMutation({
+        mutationFn: (userId) => {
+            const userData = AddToken({public_id: userId});
+            return axios.post(`${BACKEND_API}/api/account/get`, userData).then(res => res.data);
+        },
+        onSuccess: (data) => {
+            setSelectedUser(data);
+        },
+        onError: (error) => {
+            console.error('Помилка при завантаженні даних користувача:', error);
+            toast.error('Помилка при завантаженні даних користувача');
+        }
+    });
+
+    const formatBirthDate = (dateString) => {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('uk-UA');
+    };
+
+    const getHotelName = (hotelId) => {
+        if (!hotelsData) return "Видалено";
+        const hotel = hotelsData.find(h => h.public_id === hotelId);
+        return hotel ? hotel.title : "Видалено";
+    };
+
+    const getTourName = (tourId) => {
+        if (!toursData) return "Видалено";
+        const tour = toursData.find(t => t.public_id === tourId);
+        return tour ? tour.title : "Видалено";
+    };
+
+    const handleViewBooking = (booking) => {
+        setSelectedBooking(booking);
+        getUserDetails(booking.user_id);
+        setShowBookingDetailsModal(true);
+    };
 
     const filteredAndSortedBookings = useMemo(() => {
         if (!bookingsData) return [];
@@ -428,6 +470,15 @@ const AdminPage = () => {
                                                         ) : (
                                                             <td className="px-4 py-3 text-center">{booking.number_of_people}</td>
                                                         )}
+                                                                                                                <td className="px-4 py-3">
+                                                            <button 
+                                                                onClick={() => handleViewBooking(booking)}
+                                                                className="p-2 bg-blue-600 rounded-lg hover:bg-blue-700"
+                                                                title="Переглянути деталі"
+                                                            >
+                                                                <Eye className="w-4 h-4" />
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -693,6 +744,23 @@ const AdminPage = () => {
                 title={getDeleteModalTitle()}
                 message={getDeleteModalMessage()}
                 isLoading={deleteHotelMutation.isLoading || deleteTourMutation.isLoading}
+            />
+
+            <BookingDetailsModal
+                isOpen={showBookingDetailsModal}
+                onClose={() => {
+                    setShowBookingDetailsModal(false);
+                    setSelectedBooking(null);
+                    setSelectedUser(null);
+                }}
+                booking={selectedBooking}
+                user={selectedUser}
+                bookingType={bookingType}
+                isLoading={userLoading}
+                getHotelName={getHotelName}
+                getTourName={getTourName}
+                formatDateTime={formatDateTime}
+                formatBirthDate={formatBirthDate}
             />
         </div>
     );
