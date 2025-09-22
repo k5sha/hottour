@@ -175,6 +175,7 @@ auth_router.post('/register', (req, res, next) => account.register(payload(req, 
 router.post('/me', (req, res, next) => account.me(payload(req, res, next)))
 router.post('/bookings', (req, res, next) => account.bookings(payload(req, res, next)))
 router.post('/logout', (req, res, next) => account.logout(payload(req, res, next)))
+router.post('/account/get', (req, res, next) => account.get(payload(req, res, next)))
 
 router.post('/hotel/create', (req, res, next) => hotel.create(payload(req, res, next)))
 router.post('/hotel/edit', (req, res, next) => hotel.edit(payload(req, res, next)))
