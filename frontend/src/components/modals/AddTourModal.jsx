@@ -13,7 +13,6 @@ const AddTourModal = ({ isOpen, onClose, editingTour }) => {
         title: '',
         location: '',
         price: '',
-        description: '',
         image: null,
         from_datetime: '',
         to_datetime: '',
@@ -34,7 +33,6 @@ const AddTourModal = ({ isOpen, onClose, editingTour }) => {
                 title: editingTour.title || '',
                 location: editingTour.location || '',
                 price: editingTour.price || '',
-                description: editingTour.description || '',
                 image: null,
                 from_datetime: convertToLocalDatetime(editingTour.from_datetime),
                 to_datetime: convertToLocalDatetime(editingTour.to_datetime),
@@ -45,7 +43,6 @@ const AddTourModal = ({ isOpen, onClose, editingTour }) => {
                 title: '',
                 location: '',
                 price: '',
-                description: '',
                 image: null,
                 from_datetime: '',
                 to_datetime: '',
@@ -83,8 +80,8 @@ const AddTourModal = ({ isOpen, onClose, editingTour }) => {
             const payload = AddToken({
                 title: tourForm.title,
                 location: tourForm.location,
+                description: 'Немає',
                 price: tourForm.price,
-                description: tourForm.description,
                 from_datetime: tourForm.from_datetime,
                 to_datetime: tourForm.to_datetime,
                 participents_limit: tourForm.participents_limit
@@ -157,16 +154,6 @@ const AddTourModal = ({ isOpen, onClose, editingTour }) => {
                             value={tourForm.price}
                             onChange={(e) => setTourForm({...tourForm, price: e.target.value})}
                             className="w-full p-3 bg-gray-800 border border-gray-700 rounded-2xl text-white"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Опис</label>
-                        <textarea
-                            value={tourForm.description}
-                            onChange={(e) => setTourForm({...tourForm, description: e.target.value})}
-                            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-2xl text-white"
-                            rows="3"
                             required
                         />
                     </div>
