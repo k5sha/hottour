@@ -75,7 +75,7 @@ const HomePage = ({ userData }) => {
 
   const deleteHotelMutation = useMutation({
     mutationFn: (hotelId) => {
-      const payload = AddToken({ id: hotelId });
+      const payload = AddToken({ public_id: hotelId });
       return axios.post(`${BACKEND_API}/api/hotel/delete`, payload);
     },
     onSuccess: () => {
@@ -91,7 +91,7 @@ const HomePage = ({ userData }) => {
 
   const deleteTourMutation = useMutation({
     mutationFn: (tourId) => {
-      const payload = AddToken({ id: tourId });
+      const payload = AddToken({ public_id: tourId });
       return axios.post(`${BACKEND_API}/api/tour/delete`, payload);
     },
     onSuccess: () => {
@@ -163,9 +163,9 @@ const HomePage = ({ userData }) => {
 
   const confirmDelete = () => {
     if (deleteType === 'hotel' && itemToDelete) {
-      deleteHotelMutation.mutate(itemToDelete.id);
+      deleteHotelMutation.mutate(itemToDelete.public_id);
     } else if (deleteType === 'tour' && itemToDelete) {
-      deleteTourMutation.mutate(itemToDelete.id);
+      deleteTourMutation.mutate(itemToDelete.public_id);
     }
   };
 
@@ -288,7 +288,7 @@ const HomePage = ({ userData }) => {
           
           <div className="grid lg:grid-cols-2 gap-10">
             {hotelsData && hotelsData.map((hotel) => (
-              <div key={hotel.id} className="group relative bg-gray-900 rounded-3xl p-8 overflow-hidden hover:scale-[1.02] transition-all duration-500">
+              <div key={hotel.public_id} className="group relative bg-gray-900 rounded-3xl p-8 overflow-hidden hover:scale-[1.02] transition-all duration-500">
                 {isAdmin && (
                   <div className="absolute top-4 right-4 z-10 flex gap-2">
                     <button
@@ -320,7 +320,6 @@ const HomePage = ({ userData }) => {
                   className="rounded-2xl w-full h-80 object-cover mb-6 group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
                     e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400';
-                    toast.error('Помилка завантаження зображення');
                   }}
                 />
                 <div className="relative">
@@ -369,7 +368,7 @@ const HomePage = ({ userData }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
             {toursData && toursData.map((tour) => (
-              <div key={tour.id} className="group relative bg-gray-900 rounded-3xl p-6 hover:scale-[1.03] transition-all duration-300">
+              <div key={tour.public_id} className="group relative bg-gray-900 rounded-3xl p-6 hover:scale-[1.03] transition-all duration-300">
                 {isAdmin && (
                   <div className="absolute top-4 right-4 z-10 flex gap-2">
                     <button
@@ -469,7 +468,7 @@ const HomePage = ({ userData }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {reviewsData && reviewsData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6).map((review) => (
-              <div key={review.id} className="bg-gray-900 rounded-3xl p-6 hover:scale-[1.02] transition-all duration-300">
+              <div key={review.public_id} className="bg-gray-900 rounded-3xl p-6 hover:scale-[1.02] transition-all duration-300">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center">
                     <User className="w-6 h-6" />
@@ -526,7 +525,6 @@ const HomePage = ({ userData }) => {
               <Link 
                 to="/faq" 
                 className="inline-flex items-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 hover:gap-4 text-xl"
-                onClick={() => toast('Перехід до FAQ', { icon: '❓' })}
               >
                 Перегляньте FAQ
                 <ArrowRight className="w-6 h-6" />
@@ -558,7 +556,6 @@ const HomePage = ({ userData }) => {
         onClose={() => {
           setShowHotelModal(false);
           setEditingHotel(null);
-          toast('Редагування закрито', { icon: '✖️' });
         }}
         editingHotel={editingHotel}
         onSuccess={editingHotel ? () => handleEditSuccess('hotel') : handleAddHotelSuccess}
@@ -569,7 +566,6 @@ const HomePage = ({ userData }) => {
         onClose={() => {
           setShowTourModal(false);
           setEditingTour(null);
-          toast('Редагування закрито', { icon: '✖️' });
         }}
         editingTour={editingTour}
         onSuccess={editingTour ? () => handleEditSuccess('tour') : handleAddTourSuccess}
@@ -581,7 +577,6 @@ const HomePage = ({ userData }) => {
           setShowDeleteModal(false);
           setItemToDelete(null);
           setDeleteType('');
-          toast('Видалення скасовано', { icon: '❌' });
         }}
         onConfirm={confirmDelete}
         title={getDeleteModalTitle()}

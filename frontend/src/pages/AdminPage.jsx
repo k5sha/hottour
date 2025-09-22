@@ -500,7 +500,7 @@ const AdminPage = () => {
                                                                 {hotel.location}
                                                             </div>
                                                         </td>
-                                                        <td className="px-4 py-3 font-bold text-green-400">{hotel.price} ₴</td>
+                                                        <td className="px-4 py-3 font-bold text-green-400">{hotel.price}₴</td>
                                                         <td className="px-4 py-3">
                                                             {hotel.rating ? (
                                                                 <div className="flex items-center gap-1">
@@ -610,7 +610,7 @@ const AdminPage = () => {
                                                                 {tour.location}
                                                             </div>
                                                         </td>
-                                                        <td className="px-4 py-3 font-bold text-green-400">{tour.price} ₴</td>
+                                                        <td className="px-4 py-3 font-bold  text-green-400">{tour.price}₴</td>
                                                         <td className="px-4 py-3">
                                                             <div className="flex items-center gap-1">
                                                                 <Calendar className="w-4 h-4 text-blue-400" />

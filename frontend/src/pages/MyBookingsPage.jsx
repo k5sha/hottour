@@ -293,7 +293,12 @@ const MyBookingsPage = ({ userData }) => {
                         </div>
                       </div>
                       
-                      <p className="text-gray-300 mb-4 line-clamp-2">{bookingInfo.description}</p>
+                      {
+                        bookingInfo.description && bookingInfo.description != "Немає" && (
+                          <p className="text-gray-300 mb-4 line-clamp-2">{bookingInfo.description}</p>
+                        )
+                      }
+                      
                       
                       <div className="flex items-center justify-between">
                         <div className="text-2xl font-bold text-indigo-400">
