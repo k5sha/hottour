@@ -5,6 +5,7 @@ import { logout } from "#handlers/account/logout";
 import { bookings } from "#handlers/account/bookings";
 import { me } from "#handlers/account/me";
 import { get } from "#handlers/account/get";
+import { settings } from "#handlers/account/settings";
 
 export const account = {
     check,
@@ -13,5 +14,6 @@ export const account = {
     register,
     bookings,
     me,
-    get
+    get,
+    settings
 }

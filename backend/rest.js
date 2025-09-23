@@ -172,6 +172,7 @@ public_router.use(async function (req, res, next) {
 
 auth_router.post('/login', (req, res, next) => account.login(payload(req, res, next)))
 auth_router.post('/register', (req, res, next) => account.register(payload(req, res, next)))
+router.post('/settings', (req, res, next) => account.settings(payload(req, res, next)))
 router.post('/me', (req, res, next) => account.me(payload(req, res, next)))
 router.post('/bookings', (req, res, next) => account.bookings(payload(req, res, next)))
 router.post('/logout', (req, res, next) => account.logout(payload(req, res, next)))
