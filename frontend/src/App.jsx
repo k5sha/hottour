@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import FAQPage from './pages/FAQPage';
+import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import AdminPage from './pages/AdminPage';
@@ -61,10 +62,20 @@ const App = () => {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/my-bookings" element={<MyBookingsPage userData={userData} />} />
         <Route 
+          path="/profile" 
+          element={
+            userData ? (
+              <ProfilePage userData={userData} />
+            ) : (
+              <NotFoundPage />
+            )
+          } 
+        />
+        <Route 
           path="/admin" 
           element={
             userData?.is_admin === 1 ? (
-              <AdminPage userData={userData} />
+              <AdminPage userData={userData}  />
             ) : (
               <NotFoundPage />
             )
