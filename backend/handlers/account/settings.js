@@ -7,7 +7,7 @@ import { QueryExecutor } from "#lib/utils/database"
 import * as tools from '#lib/utils/tools' 
 
 export async function settings({ send, error, db, data, user }) {
-    var { full_name, sex, phone, email, password } = tools.removeEmptyStrings(data)
+    var { full_name, birth_date, sex, phone, email, password } = tools.removeEmptyStrings(data)
 
     if(allEmpty(full_name, sex, phone, email, password))
         return error(WRONG_INPUT)
@@ -31,6 +31,7 @@ export async function settings({ send, error, db, data, user }) {
     let { ok: updated_user } = await QueryExecutor('users', db)
         .updateDefined({
             full_name,
+            birth_date,
             sex,
             phone,
             email,
